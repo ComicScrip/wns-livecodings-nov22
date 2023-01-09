@@ -3,6 +3,60 @@ import db from "./db";
 import wildersController from "./controller/wilders";
 import skillsController from "./controller/skills";
 import cors from "cors";
+import { ApolloServer, gql } from "apollo-server";
+import Wilder from "./entity/Wilder";
+import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
+
+const typeDefs = gql`
+  type SkillOfWilder {
+    id: Int
+    name: String
+    votes: Int
+  }
+
+  type Wilder {
+    id: Int
+    name: String
+    skills: [SkillOfWilder]
+  }
+
+  type Query {
+    wilders: [Wilder]
+  }
+
+  type Mutation {
+    createWilder(name: String!): Wilder
+  }
+`;
+
+const resolvers = {
+  Query: {
+    wilders: async () => {
+      const wilders = await db
+        .getRepository(Wilder)
+        .find({ relations: { grades: { skill: true } } });
+
+      return wilders.map((wilder) => {
+        return {
+          ...wilder,
+          grades: undefined,
+          skills: wilder.grades.map((g) => {
+            return {
+              id: g.skill.id,
+              name: g.skill.name,
+              votes: g.votes,
+            };
+          }),
+        };
+      });
+    },
+  },
+  Mutation: {
+    async createWilder(_: any, args: { name: string }) {
+      return await db.getRepository(Wilder).save(args);
+    },
+  },
+};
 
 const app = express();
 
@@ -25,7 +79,20 @@ app.delete("/skills/:id", skillsController.delete);
 
 async function start(): Promise<void> {
   await db.initialize();
-  app.listen(4000, () => {
+
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    csrfPrevention: true,
+    cache: "bounded",
+    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+  });
+
+  await server.listen().then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+  });
+
+  app.listen(4001, () => {
     console.log("server ready");
   });
 }
