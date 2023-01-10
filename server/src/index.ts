@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import express from "express";
 import db from "./db";
 import wildersController from "./controller/wilders";
@@ -6,57 +7,8 @@ import cors from "cors";
 import { ApolloServer, gql } from "apollo-server";
 import Wilder from "./entity/Wilder";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
-
-const typeDefs = gql`
-  type SkillOfWilder {
-    id: Int
-    name: String
-    votes: Int
-  }
-
-  type Wilder {
-    id: Int
-    name: String
-    skills: [SkillOfWilder]
-  }
-
-  type Query {
-    wilders: [Wilder]
-  }
-
-  type Mutation {
-    createWilder(name: String!): Wilder
-  }
-`;
-
-const resolvers = {
-  Query: {
-    wilders: async () => {
-      const wilders = await db
-        .getRepository(Wilder)
-        .find({ relations: { grades: { skill: true } } });
-
-      return wilders.map((wilder) => {
-        return {
-          ...wilder,
-          grades: undefined,
-          skills: wilder.grades.map((g) => {
-            return {
-              id: g.skill.id,
-              name: g.skill.name,
-              votes: g.votes,
-            };
-          }),
-        };
-      });
-    },
-  },
-  Mutation: {
-    async createWilder(_: any, args: { name: string }) {
-      return await db.getRepository(Wilder).save(args);
-    },
-  },
-};
+import { buildSchema } from "type-graphql";
+import { WilderResolver } from "./resolvers/wilderResolver";
 
 const app = express();
 
@@ -79,10 +31,11 @@ app.delete("/skills/:id", skillsController.delete);
 
 async function start(): Promise<void> {
   await db.initialize();
-
+  const schema = await buildSchema({
+    resolvers: [WilderResolver],
+  });
   const server = new ApolloServer({
-    typeDefs,
-    resolvers,
+    schema,
     csrfPrevention: true,
     cache: "bounded",
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
