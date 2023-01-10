@@ -1,5 +1,5 @@
 import { ApolloError } from "apollo-server";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
 import db from "../db";
 import Wilder, { WilderInput } from "../entity/Wilder";
 
@@ -43,5 +43,12 @@ export class WilderResolver {
   @Mutation(() => Wilder)
   async createWilder(@Arg("data") data: WilderInput): Promise<Wilder> {
     return await db.getRepository(Wilder).save(data);
+  }
+
+  @Mutation(() => Boolean)
+  async deleteWilder(@Arg("id") id: number): Promise<boolean> {
+    const { affected } = await db.getRepository(Wilder).delete(id);
+    if (affected === 0) throw new ApolloError("wilder not found", "NOT_FOUND");
+    return true;
   }
 }
