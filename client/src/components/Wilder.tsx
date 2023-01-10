@@ -1,25 +1,51 @@
 import React from "react";
 import blank_profile from "../assets/avatar.png";
-import { deleteWilder } from "../services/wilders";
 import Skill from "./Skill";
 import { IWilder } from "../types/IWilder";
-import { Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
+import {
+  useDeleteWilderMutation,
+  WildersDocument,
+  WildersQuery,
+} from "../gql/generated/schema";
 
 interface WilderProps {
   wilder: IWilder;
-  setWilders: Dispatch<SetStateAction<IWilder[]>>;
 }
 
 const Wilder = ({
   wilder: { id, name, skills = [], avatarUrl },
-  setWilders,
 }: WilderProps) => {
+  const [deleteWilder, { client }] = useDeleteWilderMutation();
   const handleDelete = async () => {
     if (window.confirm("are you sure ?"))
       try {
-        setWilders((oldList) => oldList.filter((wilder) => wilder.id !== id));
-        await deleteWilder(id);
+        await deleteWilder({
+          variables: { deleteWilderId: id },
+          /*
+          update(cache) {
+            const cached = cache.readQuery<WildersQuery>({
+              query: WildersDocument,
+              
+            });
+
+            cache.writeQuery<WildersQuery>({
+              query: WildersDocument,
+              data: {
+                wilders: (cached?.wilders || []).filter((w) => w.id !== id),
+              },
+            });
+          },
+          */
+        });
+        client.cache.updateQuery<WildersQuery>(
+          { query: WildersDocument },
+          (data) => {
+            return {
+              wilders: (data?.wilders || []).filter((w) => w.id !== id),
+            };
+          }
+        );
       } catch (err) {
         console.error(err);
       }
