@@ -1,5 +1,5 @@
 import { ApolloError } from "apollo-server";
-import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import db from "../db";
 import Wilder, { WilderInput } from "../entity/Wilder";
 
