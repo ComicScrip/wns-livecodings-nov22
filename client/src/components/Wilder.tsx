@@ -16,36 +16,23 @@ interface WilderProps {
 const Wilder = ({
   wilder: { id, name, skills = [], avatarUrl },
 }: WilderProps) => {
-  const [deleteWilder, { client }] = useDeleteWilderMutation();
+  const [deleteWilder] = useDeleteWilderMutation();
   const handleDelete = async () => {
     if (window.confirm("are you sure ?"))
       try {
         await deleteWilder({
           variables: { deleteWilderId: id },
-          /*
           update(cache) {
-            const cached = cache.readQuery<WildersQuery>({
-              query: WildersDocument,
-              
-            });
-
-            cache.writeQuery<WildersQuery>({
-              query: WildersDocument,
-              data: {
-                wilders: (cached?.wilders || []).filter((w) => w.id !== id),
-              },
-            });
+            cache.updateQuery<WildersQuery>(
+              { query: WildersDocument },
+              (data) => {
+                return {
+                  wilders: (data?.wilders || []).filter((w) => w.id !== id),
+                };
+              }
+            );
           },
-          */
         });
-        client.cache.updateQuery<WildersQuery>(
-          { query: WildersDocument },
-          (data) => {
-            return {
-              wilders: (data?.wilders || []).filter((w) => w.id !== id),
-            };
-          }
-        );
       } catch (err) {
         console.error(err);
       }
