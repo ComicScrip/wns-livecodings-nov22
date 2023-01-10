@@ -3,28 +3,13 @@ import React from "react";
 import Loader from "../components/Loader";
 import Wilder from "../components/Wilder";
 import WilderForm from "../components/WilderForm";
-import { IWilder } from "../types/IWilder";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { useQuery, gql } from "@apollo/client";
-
-const GET_WILDERS = gql`
-  query WilderList {
-    wilders {
-      id
-      name
-      skills {
-        id
-        name
-        votes
-      }
-    }
-  }
-`;
+import { useWildersQuery } from "../gql/generated/schema";
 
 export default function Home() {
   const [parent] = useAutoAnimate<HTMLUListElement>();
-  const { loading: loadingWilders, data, refetch } = useQuery(GET_WILDERS);
-  const wilders: IWilder[] = data?.wilders || [];
+  const { loading: loadingWilders, data, refetch } = useWildersQuery();
+  const wilders = data?.wilders || [];
 
   return (
     <div>
@@ -41,9 +26,7 @@ export default function Home() {
           wilders
             .slice()
             .sort((a, b) => b.id - a.id)
-            .map((wilder) => (
-              <Wilder key={wilder.id} setWilders={() => {}} wilder={wilder} />
-            ))
+            .map((wilder) => <Wilder key={wilder.id} wilder={wilder} />)
         )}
       </ul>
     </div>
