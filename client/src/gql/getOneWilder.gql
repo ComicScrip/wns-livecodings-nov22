@@ -1,10 +1,10 @@
-query Wilders {
-  wilders {
+query Wilder($wilderId: Int!) {
+  wilder(id: $wilderId) {
     id
     name
-    bio
     city
     avatarUrl
+    bio
     skills {
       id
       name

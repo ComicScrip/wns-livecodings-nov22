@@ -1,40 +1,34 @@
 import React, { useState, FormEvent, useRef } from "react";
 import {
-  useCreateWilderMutation,
-  WildersDocument,
+  SkillsDocument,
+  useCreateSkillMutation,
 } from "../gql/generated/schema";
 
-export default function WilderForm() {
+export default function SkillForm() {
   const [name, setName] = useState("");
-  const inputRef = useRef<any>();
-
-  const [createWilder, { loading: processing }] = useCreateWilderMutation();
+  const [createSkill, { loading: processing }] = useCreateSkillMutation();
+  const nameRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
-
-    try {
-      await createWilder({
-        variables: { data: { name } },
-        refetchQueries: [{ query: WildersDocument }],
-      });
-    } catch (err) {
-      console.error("eeee");
-    }
-
+    if (!name) return;
+    await createSkill({
+      variables: { data: { name } },
+      refetchQueries: [{ query: SkillsDocument }],
+    });
     setName("");
-    setTimeout(() => inputRef.current?.focus(), 100);
+    setTimeout(() => {
+      nameRef.current?.focus();
+    }, 50);
   };
 
   return (
-    <form onSubmit={handleSubmit} className="pt-4">
+    <form onSubmit={handleSubmit} className="pt-4 pb-4 flex">
       <label htmlFor="name" className="mr-2">
         <span className="mr-3">Name</span>
         <input
-          data-testid="newWilderName"
-          ref={inputRef}
+          ref={nameRef}
           type="text"
-          maxLength={30}
           id="name"
           disabled={processing}
           onChange={(e) => setName(e.target.value)}
@@ -44,8 +38,6 @@ export default function WilderForm() {
       <button type="submit" disabled={processing}>
         +
       </button>
-      <br />
-      <br />
     </form>
   );
 }

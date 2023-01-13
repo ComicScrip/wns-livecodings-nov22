@@ -1,22 +1,23 @@
 import React from "react";
 import blank_profile from "../assets/avatar.png";
 import Skill from "./Skill";
-import { IWilder } from "../types/IWilder";
 import { Link } from "react-router-dom";
 import {
   useDeleteWilderMutation,
+  Wilder as WilderType,
   WildersDocument,
   WildersQuery,
 } from "../gql/generated/schema";
 
 interface WilderProps {
-  wilder: IWilder;
+  wilder: WilderType;
 }
 
 const Wilder = ({
   wilder: { id, name, skills = [], avatarUrl },
 }: WilderProps) => {
   const [deleteWilder] = useDeleteWilderMutation();
+
   const handleDelete = async () => {
     if (window.confirm("are you sure ?"))
       try {
@@ -58,15 +59,18 @@ const Wilder = ({
             </Link>
 
             <ul className="flex flex-wrap">
-              {skills.slice().map((skill, index) => (
-                <Skill
-                  key={index}
-                  title={skill.name}
-                  wilderId={id}
-                  skillId={skill.id}
-                  votes={skill.votes}
-                />
-              ))}
+              {skills
+                .slice()
+                .sort((a, b) => b.votes - a.votes)
+                .map((skill, index) => (
+                  <Skill
+                    key={index}
+                    title={skill.name}
+                    votes={skill.votes}
+                    wilderId={id}
+                    skillId={skill.id}
+                  />
+                ))}
             </ul>
           </div>
           <div className="flex flex-col min-w-[40px]">

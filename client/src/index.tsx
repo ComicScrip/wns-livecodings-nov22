@@ -6,7 +6,7 @@ import reportWebVitals from "./reportWebVitals";
 import { BrowserRouter } from "react-router-dom";
 import { MuiThemeProvider, createTheme } from "@material-ui/core/styles";
 import { ApolloProvider } from "@apollo/client";
-import apolloClient from "./services/apolloClient";
+import apolloClient from "./gql/client";
 
 const theme = createTheme({
   palette: {
