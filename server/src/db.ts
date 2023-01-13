@@ -4,8 +4,11 @@ import Skill from "./entity/Skill";
 import Wilder from "./entity/Wilder";
 
 const datasource = new DataSource({
-  type: "sqlite",
-  database: "./wildersdb.sqlite",
+  type: "postgres",
+  host: "db",
+  username: "postgres",
+  password: "postgres",
+  database: "postgres",
   synchronize: true,
   entities: [Wilder, Skill, Grade],
   logging: ["query", "error"],

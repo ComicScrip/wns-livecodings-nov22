@@ -29,6 +29,8 @@ app.patch("/skills/:id", skillsController.update);
 app.delete("/skills/:id", skillsController.delete);
 
 async function start(): Promise<void> {
+  console.log("hola");
+
   await db.initialize();
   const schema = await buildSchema({
     resolvers: [WilderResolver],
