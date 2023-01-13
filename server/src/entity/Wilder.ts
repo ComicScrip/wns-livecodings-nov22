@@ -1,6 +1,6 @@
-import { MaxLength } from "class-validator";
 import { Field, InputType, ObjectType } from "type-graphql";
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { MaxLength, MinLength } from "class-validator";
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import Grade from "./Grade";
 
 @ObjectType()
@@ -15,41 +15,52 @@ class SkillOfWilder {
   votes: number;
 }
 
-@ObjectType()
 @Entity()
+@ObjectType()
 class Wilder {
-  @PrimaryGeneratedColumn()
   @Field()
+  @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
   @Field()
-  name: string;
+  @Column({ length: 100 })
+  name?: string;
 
-  @Column({ nullable: true })
   @Field({ nullable: true })
-  bio?: string;
-
-  @Column({ nullable: true })
-  @Field({ nullable: true })
+  @Column({ nullable: true, length: 100, type: "varchar" })
   city?: string;
 
-  @Column({ nullable: true })
   @Field({ nullable: true })
+  @Column({ nullable: true, length: 100, type: "varchar" })
   avatarUrl?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true, type: "text" })
+  bio?: string;
+
+  @Field(() => [SkillOfWilder])
+  skills?: SkillOfWilder[];
 
   @OneToMany(() => Grade, (g) => g.wilder)
   grades: Grade[];
+}
 
-  @Field(() => [SkillOfWilder])
-  skills: SkillOfWilder[];
+@InputType()
+export class SkillId {
+  @Field()
+  id: number;
 }
 
 @InputType()
 export class WilderInput {
   @Field()
   @MaxLength(100)
+  @MinLength(1)
   name: string;
+
+  @Field({ nullable: true })
+  @MaxLength(100)
+  city?: string;
 
   @Field({ nullable: true })
   @MaxLength(500)
@@ -57,11 +68,10 @@ export class WilderInput {
 
   @Field({ nullable: true })
   @MaxLength(100)
-  city?: string;
-
-  @Field({ nullable: true })
-  @MaxLength(200)
   avatarUrl?: string;
+
+  @Field(() => [SkillId], { nullable: true })
+  skills?: SkillId[];
 }
 
 export default Wilder;

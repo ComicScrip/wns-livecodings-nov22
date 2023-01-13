@@ -1,7 +1,5 @@
 import { DataSource } from "typeorm";
-import Grade from "./entity/Grade";
-import Skill from "./entity/Skill";
-import Wilder from "./entity/Wilder";
+import { join } from "path";
 
 const datasource = new DataSource({
   type: "postgres",
@@ -10,7 +8,7 @@ const datasource = new DataSource({
   password: "postgres",
   database: "postgres",
   synchronize: true,
-  entities: [Wilder, Skill, Grade],
+  entities: [join(__dirname, "/entity/*.ts")],
   logging: ["query", "error"],
 });
 

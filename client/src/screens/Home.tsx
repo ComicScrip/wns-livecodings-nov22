@@ -8,12 +8,12 @@ import { useWildersQuery } from "../gql/generated/schema";
 
 export default function Home() {
   const [parent] = useAutoAnimate<HTMLUListElement>();
-  const { loading: loadingWilders, data, refetch } = useWildersQuery();
+  const { loading: loadingWilders, data } = useWildersQuery();
   const wilders = data?.wilders || [];
 
   return (
     <div>
-      <WilderForm onWilderCreated={refetch} />
+      <WilderForm />
       <ul
         ref={parent}
         className={clsx(
