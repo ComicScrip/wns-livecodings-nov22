@@ -7,7 +7,7 @@ import {
   Resolver,
   Root,
 } from "type-graphql";
-import { ApolloError } from "apollo-server-errors";
+import { GraphQLError } from "graphql";
 import Wilder, {
   SkillId,
   SkillOfWilder,
@@ -36,8 +36,10 @@ export class WilderResolver {
     );
   })
   async skills(@Root() wilder: Wilder): Promise<any> {
-    return (dataloader: DataLoader<number, SkillOfWilder[]>) =>
-      dataloader.load(wilder.id);
+    console.log("test");
+
+    return async (dataloader: DataLoader<number, SkillOfWilder[]>) =>
+      await dataloader.load(wilder.id);
   }
 
   @Query(() => [Wilder])
@@ -51,7 +53,7 @@ export class WilderResolver {
       .getRepository(Wilder)
       .findOne({ where: { id }, relations: { grades: { skill: true } } });
 
-    if (wilder === null) throw new ApolloError("wilder not found", "NOT_FOUND");
+    if (wilder === null) throw new GraphQLError("wilder not found");
 
     return wilder;
   }
@@ -81,7 +83,7 @@ export class WilderResolver {
   @Mutation(() => Boolean)
   async deleteWilder(@Arg("id", () => Int) id: number): Promise<boolean> {
     const { affected } = await datasource.getRepository(Wilder).delete(id);
-    if (affected === 0) throw new ApolloError("wilder not found", "NOT_FOUND");
+    if (affected === 0) throw new GraphQLError("wilder not found");
     return true;
   }
 
@@ -96,10 +98,7 @@ export class WilderResolver {
       relations: { grades: { skill: true } },
     });
 
-    if (wilderToUpdate === null)
-      throw new ApolloError("wilder not found", "NOT_FOUND");
-
-    console.log({ name, bio, city, avatarUrl });
+    if (wilderToUpdate === null) throw new GraphQLError("wilder not found");
 
     await datasource
       .getRepository(Wilder)
