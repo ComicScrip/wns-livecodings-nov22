@@ -19,7 +19,7 @@ async function start(): Promise<void> {
     plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
   });
 
-  await server.listen().then(({ url }) => {
+  await server.listen().then(({ url }: { url: string }) => {
     console.log(`🚀  Server ready at ${url}`);
   });
 }

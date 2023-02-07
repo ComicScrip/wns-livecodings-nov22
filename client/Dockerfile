@@ -1,11 +1,16 @@
-FROM node:lts-alpine
+FROM node:16.19-alpine
+
+RUN apk --no-cache add curl
+RUN npm i -g pnpm
 
 RUN mkdir /app
 WORKDIR /app
 
-COPY .npmrc .
 COPY package*.json .
-RUN npm i
+COPY pnpm* .
+COPY .npmrc .
+
+RUN pnpm i
 
 COPY src ./src
 COPY public ./public
@@ -13,5 +18,6 @@ COPY tsconfig.json .
 COPY tailwind.config.js .
 COPY postcss.config.js .
 COPY codegen.yml .
+COPY .env .
 
-CMD npm start
+CMD pnpm start
