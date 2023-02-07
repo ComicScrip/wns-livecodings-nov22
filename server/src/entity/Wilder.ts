@@ -1,5 +1,5 @@
 import { Field, InputType, ObjectType } from "type-graphql";
-import { MaxLength, MinLength } from "class-validator";
+import { MaxLength, Min, MinLength, ValidateNested } from "class-validator";
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import Grade from "./Grade";
 
@@ -48,6 +48,7 @@ class Wilder {
 @InputType()
 export class SkillId {
   @Field()
+  @Min(0)
   id: number;
 }
 
@@ -70,6 +71,31 @@ export class WilderInput {
   @MaxLength(100)
   avatarUrl?: string;
 
+  @ValidateNested()
+  @Field(() => [SkillId], { nullable: true })
+  skills?: SkillId[];
+}
+
+@InputType()
+export class WilderUpdateInput {
+  @Field()
+  @MaxLength(100)
+  @MinLength(1)
+  name?: string;
+
+  @Field({ nullable: true })
+  @MaxLength(100)
+  city?: string;
+
+  @Field({ nullable: true })
+  @MaxLength(500)
+  bio?: string;
+
+  @Field({ nullable: true })
+  @MaxLength(100)
+  avatarUrl?: string;
+
+  @ValidateNested()
   @Field(() => [SkillId], { nullable: true })
   skills?: SkillId[];
 }
