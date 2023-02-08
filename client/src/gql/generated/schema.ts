@@ -18,9 +18,12 @@ export type Scalars = {
 export type Mutation = {
   __typename?: 'Mutation';
   createSkill: Skill;
+  createUser: User;
   createWilder: Wilder;
   deleteSkill: Scalars['Boolean'];
   deleteWilder: Scalars['Boolean'];
+  login: Scalars['String'];
+  logout: Scalars['Boolean'];
   updateGrade: Scalars['Boolean'];
   updateSkill: Skill;
   updateWilder: Wilder;
@@ -29,6 +32,11 @@ export type Mutation = {
 
 export type MutationCreateSkillArgs = {
   data: SkillInput;
+};
+
+
+export type MutationCreateUserArgs = {
+  data: UserInput;
 };
 
 
@@ -47,6 +55,11 @@ export type MutationDeleteWilderArgs = {
 };
 
 
+export type MutationLoginArgs = {
+  data: UserInput;
+};
+
+
 export type MutationUpdateGradeArgs = {
   skillId: Scalars['Int'];
   votes: Scalars['Int'];
@@ -61,12 +74,13 @@ export type MutationUpdateSkillArgs = {
 
 
 export type MutationUpdateWilderArgs = {
-  data: WilderInput;
+  data: WilderUpdateInput;
   id: Scalars['Int'];
 };
 
 export type Query = {
   __typename?: 'Query';
+  profile: User;
   skills: Array<Skill>;
   wilder: Wilder;
   wilders: Array<Wilder>;
@@ -98,6 +112,17 @@ export type SkillOfWilder = {
   votes: Scalars['Float'];
 };
 
+export type User = {
+  __typename?: 'User';
+  email: Scalars['String'];
+  id: Scalars['Float'];
+};
+
+export type UserInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Wilder = {
   __typename?: 'Wilder';
   avatarUrl?: Maybe<Scalars['String']>;
@@ -109,6 +134,14 @@ export type Wilder = {
 };
 
 export type WilderInput = {
+  avatarUrl?: InputMaybe<Scalars['String']>;
+  bio?: InputMaybe<Scalars['String']>;
+  city?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  skills?: InputMaybe<Array<SkillId>>;
+};
+
+export type WilderUpdateInput = {
   avatarUrl?: InputMaybe<Scalars['String']>;
   bio?: InputMaybe<Scalars['String']>;
   city?: InputMaybe<Scalars['String']>;
@@ -151,6 +184,11 @@ export type WilderQueryVariables = Exact<{
 
 export type WilderQuery = { __typename?: 'Query', wilder: { __typename?: 'Wilder', id: number, name: string, city?: string | null, avatarUrl?: string | null, bio?: string | null, skills: Array<{ __typename?: 'SkillOfWilder', id: number, name: string, votes: number }> } };
 
+export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: number, email: string } };
+
 export type SkillsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -160,6 +198,18 @@ export type WildersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type WildersQuery = { __typename?: 'Query', wilders: Array<{ __typename?: 'Wilder', id: number, name: string, city?: string | null, avatarUrl?: string | null, bio?: string | null, skills: Array<{ __typename?: 'SkillOfWilder', id: number, name: string, votes: number }> }> };
+
+export type LoginMutationVariables = Exact<{
+  data: UserInput;
+}>;
+
+
+export type LoginMutation = { __typename?: 'Mutation', login: string };
+
+export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
+
+
+export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
 
 export type UpdateGradeMutationVariables = Exact<{
   votes: Scalars['Int'];
@@ -179,7 +229,7 @@ export type UpdateSkillMutationVariables = Exact<{
 export type UpdateSkillMutation = { __typename?: 'Mutation', updateSkill: { __typename?: 'Skill', id: number } };
 
 export type UpdateWilderMutationVariables = Exact<{
-  data: WilderInput;
+  data: WilderUpdateInput;
   updateWilderId: Scalars['Int'];
 }>;
 
@@ -360,6 +410,41 @@ export function useWilderLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Wil
 export type WilderQueryHookResult = ReturnType<typeof useWilderQuery>;
 export type WilderLazyQueryHookResult = ReturnType<typeof useWilderLazyQuery>;
 export type WilderQueryResult = Apollo.QueryResult<WilderQuery, WilderQueryVariables>;
+export const GetProfileDocument = gql`
+    query getProfile {
+  profile {
+    id
+    email
+  }
+}
+    `;
+
+/**
+ * __useGetProfileQuery__
+ *
+ * To run a query within a React component, call `useGetProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetProfileQuery(baseOptions?: Apollo.QueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+      }
+export function useGetProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetProfileQuery, GetProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetProfileQuery, GetProfileQueryVariables>(GetProfileDocument, options);
+        }
+export type GetProfileQueryHookResult = ReturnType<typeof useGetProfileQuery>;
+export type GetProfileLazyQueryHookResult = ReturnType<typeof useGetProfileLazyQuery>;
+export type GetProfileQueryResult = Apollo.QueryResult<GetProfileQuery, GetProfileQueryVariables>;
 export const SkillsDocument = gql`
     query Skills {
   skills {
@@ -438,6 +523,67 @@ export function useWildersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Wi
 export type WildersQueryHookResult = ReturnType<typeof useWildersQuery>;
 export type WildersLazyQueryHookResult = ReturnType<typeof useWildersLazyQuery>;
 export type WildersQueryResult = Apollo.QueryResult<WildersQuery, WildersQueryVariables>;
+export const LoginDocument = gql`
+    mutation Login($data: UserInput!) {
+  login(data: $data)
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
+export const LogoutDocument = gql`
+    mutation logout {
+  logout
+}
+    `;
+export type LogoutMutationFn = Apollo.MutationFunction<LogoutMutation, LogoutMutationVariables>;
+
+/**
+ * __useLogoutMutation__
+ *
+ * To run a mutation, you first call `useLogoutMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLogoutMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [logoutMutation, { data, loading, error }] = useLogoutMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<LogoutMutation, LogoutMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LogoutMutation, LogoutMutationVariables>(LogoutDocument, options);
+      }
+export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
+export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
+export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
 export const UpdateGradeDocument = gql`
     mutation UpdateGrade($votes: Int!, $skillId: Int!, $wilderId: Int!) {
   updateGrade(votes: $votes, skillId: $skillId, wilderId: $wilderId)
@@ -506,7 +652,7 @@ export type UpdateSkillMutationHookResult = ReturnType<typeof useUpdateSkillMuta
 export type UpdateSkillMutationResult = Apollo.MutationResult<UpdateSkillMutation>;
 export type UpdateSkillMutationOptions = Apollo.BaseMutationOptions<UpdateSkillMutation, UpdateSkillMutationVariables>;
 export const UpdateWilderDocument = gql`
-    mutation UpdateWilder($data: WilderInput!, $updateWilderId: Int!) {
+    mutation UpdateWilder($data: WilderUpdateInput!, $updateWilderId: Int!) {
   updateWilder(data: $data, id: $updateWilderId) {
     id
   }
