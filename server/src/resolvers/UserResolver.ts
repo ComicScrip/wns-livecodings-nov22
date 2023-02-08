@@ -10,6 +10,12 @@ import { ContextType } from "..";
 class UserResolver {
   @Mutation(() => User)
   async createUser(@Arg("data") { email, password }: UserInput): Promise<User> {
+    const exisitingUser = await datasource
+      .getRepository(User)
+      .findOne({ where: { email } });
+
+    if (exisitingUser !== null) throw new ApolloError("EMAIL_ALREADY_EXISTS");
+
     const hashedPassword = await hashPassword(password);
     return await datasource.getRepository(User).save({ email, hashedPassword });
   }
@@ -24,8 +30,10 @@ class UserResolver {
     if (user === null || !(await verifyPassword(password, user.hashedPassword)))
       throw new ApolloError("invalid credentials", "INVALID_CREDS");
 
+    // https://www.npmjs.com/package/jsonwebtoken
     const token = jwt.sign({ userId: user.id }, env.JWT_PRIVATE_KEY);
 
+    // https://stackoverflow.com/a/40135050
     res.cookie("token", token, {
       httpOnly: true,
       secure: env.NODE_ENV === "production",
