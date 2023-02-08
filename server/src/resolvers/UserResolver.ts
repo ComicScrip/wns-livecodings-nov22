@@ -21,8 +21,6 @@ class UserResolver {
   ): Promise<string> {
     const user = await datasource.getRepository(User).findOneBy({ email });
 
-    console.log({ user });
-
     if (user === null || !(await verifyPassword(password, user.hashedPassword)))
       throw new ApolloError("invalid credentials", "INVALID_CREDS");
 

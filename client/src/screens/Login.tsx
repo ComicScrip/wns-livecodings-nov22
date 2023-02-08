@@ -35,17 +35,14 @@ export default function Login() {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            console.log({ email, password });
             setError("");
             try {
               await login({ variables: { data: { email, password } } });
             } catch (err) {
-              console.error(err);
               setError("invalid credentials");
             } finally {
               client.resetStore();
             }
-            alert("Welcome back !");
           }}
         >
           <label htmlFor="email" className="block mt-6 mb-2">
