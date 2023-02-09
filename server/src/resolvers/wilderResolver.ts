@@ -1,4 +1,4 @@
-import { Arg, Int, Mutation, Query, Resolver } from "type-graphql";
+import { Arg, Authorized, Int, Mutation, Query, Resolver } from "type-graphql";
 import { ApolloError } from "apollo-server-errors";
 import Wilder, {
   SkillId,
@@ -8,6 +8,7 @@ import Wilder, {
 import datasource from "../db";
 import Grade from "../entity/Grade";
 import { In } from "typeorm";
+import { UserRole } from "../entity/User";
 
 @Resolver(Wilder)
 export class WilderResolver {
@@ -76,6 +77,7 @@ export class WilderResolver {
     return toReturn;
   }
 
+  @Authorized<UserRole>([UserRole.ADMIN])
   @Mutation(() => Boolean)
   async deleteWilder(@Arg("id", () => Int) id: number): Promise<boolean> {
     const { affected } = await datasource.getRepository(Wilder).delete(id);

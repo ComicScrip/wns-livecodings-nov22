@@ -9,6 +9,11 @@ async function reset(): Promise<void> {
       email: "user@app.com",
       hashedPassword: await hashPassword("test@123"),
     },
+    {
+      email: "admin@app.com",
+      hashedPassword: await hashPassword("test@123"),
+      role: "admin",
+    },
   ]);
   await datasource.destroy();
   console.log("done !");
