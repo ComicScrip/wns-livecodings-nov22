@@ -25,26 +25,22 @@ async function start(): Promise<void> {
 
   const schema = await buildSchema({
     resolvers: [join(__dirname, "/resolvers/*.ts")],
-    authChecker: async ({ context }: { context: ContextType }) => {
-      const {
-        req: { headers },
-      } = context;
-      const tokenInAuthHeaders = headers.authorization?.split(" ")[1];
-      const tokenInCookie = cookie.parse(headers.cookie ?? "").token;
-
+    authChecker: async ({ context }: { context: ContextType }, roles = []) => {
+      const { req } = context;
+      const tokenInAuthHeaders = req.headers.authorization?.split(" ")[1];
+      const tokenInCookie = cookie.parse(req.headers.cookie ?? "").token;
       const token = tokenInAuthHeaders ?? tokenInCookie;
+      if (typeof token !== "string") return false;
 
-      if (typeof token === "string") {
-        const decoded = jwt.verify(token, env.JWT_PRIVATE_KEY) as JWTPayload;
-        if (typeof decoded === "object") {
-          const currentUser = await db
-            .getRepository(User)
-            .findOneBy({ id: decoded.userId });
-          if (currentUser !== null) context.currentUser = currentUser;
-          return true;
-        }
-      }
-      return false;
+      const decoded = jwt.verify(token, env.JWT_PRIVATE_KEY) as JWTPayload;
+      if (typeof decoded !== "object") return false;
+
+      const id = decoded.userId;
+      const currentUser = await db.getRepository(User).findOneBy({ id });
+      if (currentUser === null) return false;
+
+      context.currentUser = currentUser;
+      return roles.length === 0 || roles.includes(currentUser.role);
     },
   });
 

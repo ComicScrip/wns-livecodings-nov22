@@ -3,6 +3,11 @@ import { IsEmail, MinLength } from "class-validator";
 import { Field, InputType, ObjectType } from "type-graphql";
 import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
+export enum UserRole {
+  ADMIN = "admin",
+  VISTOR = "visitor",
+}
+
 @ObjectType()
 @Entity()
 class User {
@@ -16,6 +21,10 @@ class User {
 
   @Column()
   hashedPassword: string;
+
+  @Field()
+  @Column({ default: UserRole.VISTOR, enum: UserRole })
+  role: string;
 }
 
 @InputType()

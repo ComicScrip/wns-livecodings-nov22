@@ -116,6 +116,7 @@ export type User = {
   __typename?: 'User';
   email: Scalars['String'];
   id: Scalars['Float'];
+  role: Scalars['String'];
 };
 
 export type UserInput = {
@@ -187,7 +188,7 @@ export type WilderQuery = { __typename?: 'Query', wilder: { __typename?: 'Wilder
 export type GetProfileQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: number, email: string } };
+export type GetProfileQuery = { __typename?: 'Query', profile: { __typename?: 'User', id: number, email: string, role: string } };
 
 export type SkillsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -415,6 +416,7 @@ export const GetProfileDocument = gql`
   profile {
     id
     email
+    role
   }
 }
     `;
