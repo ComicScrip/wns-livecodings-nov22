@@ -57,8 +57,10 @@ describe("Wilder resolver", () => {
       });
 
       expect(res.data.wilders.length).toBe(2);
-      expect(res.data.wilders[0]).toHaveProperty("id");
-      expect(res.data.wilders[0]).toHaveProperty("name");
+      res?.data?.wilders.forEach((w: Wilder) => {
+        expect(w).toHaveProperty("id");
+        expect(w).toHaveProperty("name");
+      });
     });
   });
 });
