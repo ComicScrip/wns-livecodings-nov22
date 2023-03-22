@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "integration-tests": "docker compose -f docker-compose.integration-tests.yml up --build --exit-code-from testrunner",
-    "integration-tests:backend-only": "docker compose -f docker-compose.integration-tests.yml up testDB backend --exit-code-from testrunner",
+    "integration-tests:backend-only": "docker compose -f docker-compose.integration-tests.yml up testDB backend",
     "start": "docker compose -f docker-compose.yml up --build"
   },
   "repository": {
