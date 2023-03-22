@@ -5,6 +5,7 @@
   "scripts": {
     "integration-tests": "docker compose -f docker-compose.integration-tests.yml up --build --exit-code-from testrunner",
     "integration-tests:backend-only": "docker compose -f docker-compose.integration-tests.yml up testDB backend",
+    "e2e-tests": "docker compose -f docker-compose.e2e-tests.yml up --build --exit-code-from testrunner --remove-orphans",
     "start": "docker compose -f docker-compose.yml up --build"
   },
   "repository": {

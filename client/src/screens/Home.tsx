@@ -15,6 +15,7 @@ export default function Home() {
     <div>
       <WilderForm />
       <ul
+        data-testid="wilder-list"
         ref={parent}
         className={clsx(
           loadingWilders && "opacity-90 transition-opacity duration-500"
