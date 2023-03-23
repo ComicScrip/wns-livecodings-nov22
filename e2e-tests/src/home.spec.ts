@@ -7,6 +7,21 @@ test.beforeAll(connect);
 test.beforeEach(clearDB);
 test.afterAll(disconnect);
 
-test("can view wilders in db", async ({ page }) => {});
+test("can view wilders in db", async ({ page }) => {
+  await db
+    .getRepository(Wilder)
+    .insert([{ name: "Wilder1" }, { name: "Wilder2" }]);
 
-test("can add a wilder", async ({ page }) => {});
+  page.goto("/");
+
+  await expect(page.getByTestId("wilder-list")).toContainText("Wilder1");
+  await expect(page.getByTestId("wilder-list")).toContainText("Wilder2");
+});
+
+test("can add a wilder", async ({ page }) => {
+  page.goto("/");
+
+  await page.getByTestId("newWilderInput").type("Dave Lopper");
+  await page.getByRole("button", { name: "+" }).click();
+  await expect(page.getByTestId("wilder-list")).toContainText("Dave Lopper");
+});

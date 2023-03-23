@@ -20,7 +20,9 @@ export default function Login() {
     <div>
       {currentUser?.profile ? (
         <div>
-          <p className="mb-2 mt-6">connected as {currentUser.profile.email}</p>
+          <p data-testid="logged-in-message" className="mb-2 mt-6">
+            Logged in as {currentUser.profile.email}
+          </p>
 
           <button
             onClick={async () => {
@@ -48,6 +50,7 @@ export default function Login() {
           <label htmlFor="email" className="block mt-6 mb-2">
             Email :{" "}
             <input
+              data-testid="login-email"
               type="email"
               id="email"
               value={email}
@@ -58,6 +61,7 @@ export default function Login() {
           <label htmlFor="password" className="block mb-2">
             Password :{" "}
             <input
+              data-testid="login-password"
               type="password"
               id="password"
               value={password}
