@@ -5,6 +5,8 @@
   "scripts": {
     "integration-tests": "docker compose -f docker-compose.integration-tests.yml up --build --exit-code-from testrunner",
     "integration-tests:backend-only": "docker compose -f docker-compose.integration-tests.yml up testDB backend",
+    "e2e-tests": "REACT_APP_GRAPHQL_API_URL=http://host.docker.internal:4000 docker compose -f docker-compose.e2e-tests.yml up --build --exit-code-from testrunner --remove-orphans",
+    "e2e-tests:app-only": "docker compose -f docker-compose.e2e-tests.yml up testDB backend client --build   --remove-orphans",
     "start": "docker compose -f docker-compose.yml up --build"
   },
   "repository": {
