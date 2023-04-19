@@ -1,0 +1,7 @@
+query Wilders {
+  wilders {
+    id
+    name
+    avatarUrl
+  }
+}
