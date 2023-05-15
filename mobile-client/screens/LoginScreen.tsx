@@ -5,7 +5,7 @@ import {
   useLoginMutation,
   useLogoutMutation,
 } from "../gql/generated/schema";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 export default function LoginScreen() {
   const [credentials, setCredentials] = useState({
@@ -30,7 +30,7 @@ export default function LoginScreen() {
             onPress={async () => {
               await logout();
               client.resetStore();
-              AsyncStorage.setItem("token", "");
+              SecureStore.setItemAsync("token", "");
             }}
             title="Log out"
           />
@@ -57,7 +57,7 @@ export default function LoginScreen() {
                   client.resetStore();
                   if (res.data?.login)
                     //SecureStore.setItemAsync("token", res.data?.login);
-                    AsyncStorage.setItem("token", res.data?.login);
+                    SecureStore.setItemAsync("token", res.data?.login);
                 })
                 .catch(() => setError("invalid credentials"));
             }}
