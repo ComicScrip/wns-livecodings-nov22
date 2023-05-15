@@ -6,7 +6,7 @@ console.log({ env });
 import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 
 import { setContext } from "@apollo/client/link/context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
 
 const httpLink = createHttpLink({
   uri: env.REACT_APP_GRAPHQL_API_URL as string,
@@ -15,7 +15,7 @@ const httpLink = createHttpLink({
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = await AsyncStorage.getItem("token");
+  const token = await SecureStore.getItemAsync("token");
   // return the headers to the context so httpLink can read them
   return {
     headers: {
