@@ -9,7 +9,7 @@ import { setContext } from "@apollo/client/link/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const httpLink = createHttpLink({
-  uri: env.REACT_APP_GRAPHQL_API_URL as string,
+  uri: env.REACT_APP_GRAPHQL_API_URL || ("http://192.168.1.7:4000" as string),
   credentials: "include",
 });
 
