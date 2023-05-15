@@ -22,7 +22,7 @@ export default function WilderScreen() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 30,
+    flex: 1,
   },
   separator: {
     height: 1,
