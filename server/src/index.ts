@@ -30,6 +30,9 @@ async function start(): Promise<void> {
       const tokenInAuthHeaders = req.headers.authorization?.split(" ")[1];
       const tokenInCookie = cookie.parse(req.headers.cookie ?? "").token;
       const token = tokenInAuthHeaders ?? tokenInCookie;
+
+      console.log({ tokenInAuthHeaders, tokenInCookie });
+
       if (typeof token !== "string") return false;
 
       const decoded = jwt.verify(token, env.JWT_PRIVATE_KEY) as JWTPayload;

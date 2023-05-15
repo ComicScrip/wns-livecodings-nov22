@@ -7,7 +7,7 @@ import client from "./gql/client";
 import { NavigationContainer } from "@react-navigation/native";
 
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import HomeScreen from "./screens/HomeScreen";
+import HomeScreen from "./screens/LoginScreen";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
