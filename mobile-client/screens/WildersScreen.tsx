@@ -3,8 +3,10 @@ import { useWildersQuery } from "../gql/generated/schema";
 import WilderListItem from "../components/WilderListItem";
 
 export default function WilderScreen() {
-  const { loading: loadingWilders, data } = useWildersQuery();
+  const { loading: loadingWilders, data, error } = useWildersQuery();
   const wilders = data?.wilders || [];
+
+  console.log({ error, data, loadingWilders });
 
   return (
     <View style={styles.container}>
@@ -21,9 +23,7 @@ export default function WilderScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    marginTop: 30,
-  },
+  container: {},
   separator: {
     height: 1,
     backgroundColor: "lightgrey",
