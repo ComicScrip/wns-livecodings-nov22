@@ -29,6 +29,9 @@ async function start(): Promise<void> {
       const { req } = context;
       const tokenInAuthHeaders = req.headers.authorization?.split(" ")[1];
       const tokenInCookie = cookie.parse(req.headers.cookie ?? "").token;
+
+      console.log({ tokenInAuthHeaders, tokenInCookie });
+
       const token = tokenInAuthHeaders ?? tokenInCookie;
       if (typeof token !== "string") return false;
 
@@ -38,6 +41,8 @@ async function start(): Promise<void> {
       const id = decoded.userId;
       const currentUser = await db.getRepository(User).findOneBy({ id });
       if (currentUser === null) return false;
+
+      console.log({ currentUser });
 
       context.currentUser = currentUser;
       return roles.length === 0 || roles.includes(currentUser.role);

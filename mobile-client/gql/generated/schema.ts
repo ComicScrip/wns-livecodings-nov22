@@ -24,7 +24,9 @@ export type Mutation = {
   deleteWilder: Scalars['Boolean'];
   login: Scalars['String'];
   logout: Scalars['Boolean'];
+  sendNotification: Scalars['Boolean'];
   updateGrade: Scalars['Boolean'];
+  updateProfile: User;
   updateSkill: Skill;
   updateWilder: Wilder;
 };
@@ -60,10 +62,21 @@ export type MutationLoginArgs = {
 };
 
 
+export type MutationSendNotificationArgs = {
+  data: NotificationInput;
+  userId: Scalars['Int'];
+};
+
+
 export type MutationUpdateGradeArgs = {
   skillId: Scalars['Int'];
   votes: Scalars['Int'];
   wilderId: Scalars['Int'];
+};
+
+
+export type MutationUpdateProfileArgs = {
+  data: UpdateUserInput;
 };
 
 
@@ -76,6 +89,12 @@ export type MutationUpdateSkillArgs = {
 export type MutationUpdateWilderArgs = {
   data: WilderUpdateInput;
   id: Scalars['Int'];
+};
+
+export type NotificationInput = {
+  JSONPayload?: InputMaybe<Scalars['String']>;
+  body: Scalars['String'];
+  title: Scalars['String'];
 };
 
 export type Query = {
@@ -112,9 +131,15 @@ export type SkillOfWilder = {
   votes: Scalars['Float'];
 };
 
+export type UpdateUserInput = {
+  email?: InputMaybe<Scalars['String']>;
+  expoNotificationToken?: InputMaybe<Scalars['String']>;
+};
+
 export type User = {
   __typename?: 'User';
   email: Scalars['String'];
+  expoNotificationToken?: Maybe<Scalars['String']>;
   id: Scalars['Float'];
   role: Scalars['String'];
 };
@@ -171,6 +196,13 @@ export type LogoutMutationVariables = Exact<{ [key: string]: never; }>;
 
 
 export type LogoutMutation = { __typename?: 'Mutation', logout: boolean };
+
+export type UpdateProfileMutationVariables = Exact<{
+  data: UpdateUserInput;
+}>;
+
+
+export type UpdateProfileMutation = { __typename?: 'Mutation', updateProfile: { __typename?: 'User', expoNotificationToken?: string | null, id: number } };
 
 
 export const GetProfileDocument = gql`
@@ -306,3 +338,37 @@ export function useLogoutMutation(baseOptions?: Apollo.MutationHookOptions<Logou
 export type LogoutMutationHookResult = ReturnType<typeof useLogoutMutation>;
 export type LogoutMutationResult = Apollo.MutationResult<LogoutMutation>;
 export type LogoutMutationOptions = Apollo.BaseMutationOptions<LogoutMutation, LogoutMutationVariables>;
+export const UpdateProfileDocument = gql`
+    mutation UpdateProfile($data: UpdateUserInput!) {
+  updateProfile(data: $data) {
+    expoNotificationToken
+    id
+  }
+}
+    `;
+export type UpdateProfileMutationFn = Apollo.MutationFunction<UpdateProfileMutation, UpdateProfileMutationVariables>;
+
+/**
+ * __useUpdateProfileMutation__
+ *
+ * To run a mutation, you first call `useUpdateProfileMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateProfileMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateProfileMutation, { data, loading, error }] = useUpdateProfileMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateProfileMutation(baseOptions?: Apollo.MutationHookOptions<UpdateProfileMutation, UpdateProfileMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateProfileMutation, UpdateProfileMutationVariables>(UpdateProfileDocument, options);
+      }
+export type UpdateProfileMutationHookResult = ReturnType<typeof useUpdateProfileMutation>;
+export type UpdateProfileMutationResult = Apollo.MutationResult<UpdateProfileMutation>;
+export type UpdateProfileMutationOptions = Apollo.BaseMutationOptions<UpdateProfileMutation, UpdateProfileMutationVariables>;
