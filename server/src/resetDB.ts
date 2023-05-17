@@ -16,7 +16,7 @@ async function reset(): Promise<void> {
     },
   ]);
   await datasource.destroy();
-  console.log("done!");
+  console.log("done !");
 }
 
 reset().catch(console.error);
