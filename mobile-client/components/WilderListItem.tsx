@@ -7,8 +7,6 @@ interface WilderListItemProps {
 }
 
 export default function WilderListItem({ wilder }: WilderListItemProps) {
-  console.log({ wilder });
-
   return (
     <View style={styles.container}>
       {wilder.avatarUrl ? (

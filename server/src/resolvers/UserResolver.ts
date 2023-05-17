@@ -20,7 +20,6 @@ import User, {
 import jwt from "jsonwebtoken";
 import { env } from "../env";
 import { ContextType } from "..";
-
 import { Expo } from "expo-server-sdk";
 const expo = new Expo({ accessToken: process.env.EXPO_ACCESS_TOKEN });
 
@@ -78,19 +77,10 @@ class UserResolver {
     @Arg("data") data: UpdateUserInput,
     @Ctx() { currentUser }: ContextType
   ): Promise<User> {
-    if (!currentUser) throw new Error("no current user");
-    const { expoNotificationToken } = data;
-    const userToUpdate = await datasource.getRepository(User).findOne({
-      where: { id: currentUser.id },
-    });
-
-    if (userToUpdate === null) throw new Error("user not found");
-
-    userToUpdate.expoNotificationToken = expoNotificationToken;
-
-    await datasource.getRepository(User).save(userToUpdate);
-
-    return userToUpdate;
+    if (typeof currentUser === "undefined") throw new Error("no current user");
+    return await datasource
+      .getRepository(User)
+      .save({ ...currentUser, ...data });
   }
 
   @Authorized<UserRole[]>([UserRole.ADMIN])
@@ -102,19 +92,14 @@ class UserResolver {
     const user = await datasource.getRepository(User).findOne({
       where: { id },
     });
-
     if (user === null) throw new Error("NOT_FOUND");
 
-    if (
-      user.expoNotificationToken === null ||
-      typeof user.expoNotificationToken === "undefined"
-    )
-      throw new Error("user has no registered token");
+    if (typeof user.expoNotificationToken === "undefined")
+      throw new Error("user has no registered device token");
 
-    const res = await expo.sendPushNotificationsAsync([
+    await expo.sendPushNotificationsAsync([
       {
         to: user.expoNotificationToken,
-        sound: "default",
         title: data.title,
         body: data.body,
         data:
@@ -123,8 +108,6 @@ class UserResolver {
             : undefined,
       },
     ]);
-
-    console.log({ res });
 
     return true;
   }

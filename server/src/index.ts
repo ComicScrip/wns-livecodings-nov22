@@ -42,8 +42,6 @@ async function start(): Promise<void> {
       const currentUser = await db.getRepository(User).findOneBy({ id });
       if (currentUser === null) return false;
 
-      console.log({ currentUser });
-
       context.currentUser = currentUser;
       return roles.length === 0 || roles.includes(currentUser.role);
     },

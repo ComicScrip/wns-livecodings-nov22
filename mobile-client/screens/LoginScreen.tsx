@@ -27,11 +27,7 @@ export default function LoginScreen() {
   useEffect(() => {
     if (currentUser?.profile)
       registerForPushNotificationsAsync().then((expoNotificationToken) =>
-        updateProfile({ variables: { data: { expoNotificationToken } } }).then(
-          () => {
-            console.log("token sent to backend", { expoNotificationToken });
-          }
-        )
+        updateProfile({ variables: { data: { expoNotificationToken } } })
       );
   }, [currentUser?.profile]);
 
@@ -42,7 +38,6 @@ export default function LoginScreen() {
           <Text>connected as {currentUser.profile.email}</Text>
           <Button
             onPress={async () => {
-              console.log({ credentials });
               try {
                 await logout();
                 SecureStore.deleteItemAsync("token");

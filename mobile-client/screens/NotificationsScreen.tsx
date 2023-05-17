@@ -22,7 +22,7 @@ export default function NotificationsScreen() {
 
     responseListener.current =
       Notifications.addNotificationResponseReceivedListener((response) => {
-        console.log("user interaction", response);
+        console.log("user interaction with notification", response);
       });
 
     return () => {
@@ -53,9 +53,3 @@ export default function NotificationsScreen() {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-});
