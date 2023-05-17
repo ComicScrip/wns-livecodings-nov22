@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import {
   useGetProfileQuery,
   useLoginMutation,
   useLogoutMutation,
+  useUpdateProfileMutation,
 } from "../gql/generated/schema";
 import * as SecureStore from "expo-secure-store";
+import { registerForPushNotificationsAsync } from "../utils/notifications";
 
 export default function LoginScreen() {
   const [credentials, setCredentials] = useState({
@@ -20,6 +22,15 @@ export default function LoginScreen() {
     errorPolicy: "ignore",
   });
 
+  const [updateProfile] = useUpdateProfileMutation();
+
+  useEffect(() => {
+    if (currentUser?.profile)
+      registerForPushNotificationsAsync().then((expoNotificationToken) =>
+        updateProfile({ variables: { data: { expoNotificationToken } } })
+      );
+  }, [currentUser?.profile]);
+
   return (
     <View style={styles.container}>
       {currentUser?.profile ? (
@@ -27,7 +38,6 @@ export default function LoginScreen() {
           <Text>connected as {currentUser.profile.email}</Text>
           <Button
             onPress={async () => {
-              console.log({ credentials });
               try {
                 await logout();
                 SecureStore.deleteItemAsync("token");
