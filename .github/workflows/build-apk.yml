@@ -1,5 +1,6 @@
 name: Build Android App
 on:
+  push:
   workflow_dispatch:
     inputs:
       os:
