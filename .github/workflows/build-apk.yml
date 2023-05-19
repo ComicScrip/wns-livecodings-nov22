@@ -27,16 +27,19 @@ jobs:
       - name: 📦 Install dependencies
         run: cd mobile-client && npm i
 
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H%M%S')" >> $GITHUB_ENV
+
       - name: 👷 Build app
         run: |
           cd mobile-client && eas build --local \
             --non-interactive \
-            --output=./app-build \
+            --output=./app-build-$NOW \
             --platform=android \
             --profile=preview
 
       - name: 📱 Upload binary
         uses: actions/upload-artifact@v2
         with:
-          name: wildersbook-nov21-preview
-          path: app-build
+          name: wildersbook-nov21-preview-$NOW
+          path: mobile-client/app-build-$NOW
