@@ -1,30 +1,10 @@
 name: Build Android App
 on:
   push:
-  workflow_dispatch:
-    inputs:
-      os:
-        type: choice
-        description: OS to build on. Ubuntu is faster, MacOS supports iOS builds, Windows is unsupported
-        options:
-          - macos-latest
-          - ubuntu-latest
-      platform:
-        type: choice
-        description: Platform to build for
-        options:
-          - android
-          - ios
-      profile:
-        type: choice
-        description: Build profile to use
-        options:
-          - development
-          - preview
-          - production
+
 jobs:
   build:
-    runs-on: ${{ github.event.inputs.os }}
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node: [16.x]
@@ -55,11 +35,11 @@ jobs:
           eas build --local \
             --non-interactive \
             --output=./app-build \
-            --platform=${{ github.event.inputs.platform }} \
-            --profile=${{ github.event.inputs.profile }}
+            --platform=android \
+            --profile=preview
 
       - name: 📱 Upload binary
         uses: actions/upload-artifact@v2
         with:
-          name: app-${{ github.event.inputs.platform }}
+          name: wildersbook-nov21-preview
           path: app-build
