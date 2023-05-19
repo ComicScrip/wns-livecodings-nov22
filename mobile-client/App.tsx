@@ -2,7 +2,7 @@ import "react-native-gesture-handler";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import WilderScreen from "./screens/WildersScreen";
 import { ApolloProvider } from "@apollo/client";
-import client from "./gql/client";
+import { client } from "./gql/client";
 import LoginScreen from "./screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import NotificationsScreen from "./screens/NotificationsScreen";

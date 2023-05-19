@@ -2,8 +2,7 @@ import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
-
-const env = Constants.expoConfig?.extra;
+const env = Constants.expoConfig?.extra || {};
 
 console.log({ env });
 
@@ -24,7 +23,7 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
-const client = new ApolloClient({
+export const client = new ApolloClient({
   cache: new InMemoryCache(),
   defaultOptions: {
     query: {
@@ -33,5 +32,3 @@ const client = new ApolloClient({
   },
   link: authLink.concat(httpLink),
 });
-
-export default client;

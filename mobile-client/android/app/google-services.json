@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "251157054803",
+    "project_id": "wns-livecodings-nov22",
+    "storage_bucket": "wns-livecodings-nov22.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:251157054803:android:1617ac573bc3b3f6de8da6",
+        "android_client_info": {
+          "package_name": "com.comicscrip.mobileappnov22"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "251157054803-shvs75hrruauj6qfbac3dajdhaq8hs13.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAMy5O_6STFS6qXtxgHWRg3WEqU1mpmQP4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "251157054803-shvs75hrruauj6qfbac3dajdhaq8hs13.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
