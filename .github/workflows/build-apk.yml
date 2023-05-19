@@ -41,5 +41,5 @@ jobs:
       - name: 📱 Upload binary
         uses: actions/upload-artifact@v2
         with:
-          name: wildersbook-nov21-preview-${{ $NOW }}
+          name: wildersbook-nov21-preview-${{ env.NOW }}
           path: mobile-client/app-build
