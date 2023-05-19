@@ -5,9 +5,6 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node: [16.x]
     steps:
       - name: 🏗 Setup repo
         uses: actions/checkout@v2
@@ -15,7 +12,7 @@ jobs:
       - name: 🏗 Setup Node
         uses: actions/setup-node@v2
         with:
-          node-version: ${{ matrix.node }}
+          node-version: "16.x"
 
       - name: 🏗 Setup Expo and EAS
         uses: expo/expo-github-action@v7
@@ -28,11 +25,11 @@ jobs:
         run: cd mobile-client && npm i -g eas-cli-local-build-plugin
 
       - name: 📦 Install dependencies
-        run: npm i
+        run: cd mobile-client && npm i
 
       - name: 👷 Build app
         run: |
-          eas build --local \
+          cd mobile-client && eas build --local \
             --non-interactive \
             --output=./app-build \
             --platform=android \
