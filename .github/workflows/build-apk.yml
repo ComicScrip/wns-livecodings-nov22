@@ -34,7 +34,7 @@ jobs:
         run: |
           cd mobile-client && eas build --local \
             --non-interactive \
-            --output=./app-build \
+            --output=./app-build-${{ env.NOW }}.apk \
             --platform=android \
             --profile=preview
 
@@ -42,4 +42,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: wildersbook-nov21-preview-${{ env.NOW }}
-          path: mobile-client/app-build
+          path: mobile-client/app-build-${{ env.NOW }}.apk
