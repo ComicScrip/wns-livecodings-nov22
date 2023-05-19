@@ -29,6 +29,9 @@ async function start(): Promise<void> {
       const { req } = context;
       const tokenInAuthHeaders = req.headers.authorization?.split(" ")[1];
       const tokenInCookie = cookie.parse(req.headers.cookie ?? "").token;
+
+      console.log({ tokenInAuthHeaders, tokenInCookie });
+
       const token = tokenInAuthHeaders ?? tokenInCookie;
 
       console.log({ tokenInAuthHeaders, tokenInCookie });

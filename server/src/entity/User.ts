@@ -25,6 +25,10 @@ class User {
   @Field()
   @Column({ default: UserRole.VISTOR, enum: UserRole })
   role: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  expoNotificationToken?: string;
 }
 
 @InputType()
@@ -36,6 +40,28 @@ export class UserInput {
   @Field()
   @MinLength(8)
   password: string;
+}
+
+@InputType()
+export class NotificationInput {
+  @Field()
+  title: string;
+
+  @Field()
+  body: string;
+
+  @Field({ nullable: true })
+  JSONPayload?: string;
+}
+
+@InputType()
+export class UpdateUserInput {
+  @Field({ nullable: true })
+  @IsEmail()
+  email?: string;
+
+  @Field({ nullable: true })
+  expoNotificationToken?: string;
 }
 
 const hashingOptions = {

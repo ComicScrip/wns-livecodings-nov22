@@ -1,22 +1,22 @@
 import "react-native-gesture-handler";
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import WilderScreen from "./screens/WildersScreen";
 import { ApolloProvider } from "@apollo/client";
 import client from "./gql/client";
+import LoginScreen from "./screens/LoginScreen";
 import { NavigationContainer } from "@react-navigation/native";
+import NotificationsScreen from "./screens/NotificationsScreen";
 
-import { createDrawerNavigator } from "@react-navigation/drawer";
-import HomeScreen from "./screens/LoginScreen";
 const Drawer = createDrawerNavigator();
 
 export default function App() {
   return (
     <ApolloProvider client={client}>
       <NavigationContainer>
-        <Drawer.Navigator initialRouteName="Wilders">
-          <Drawer.Screen name="Home" component={HomeScreen} />
+        <Drawer.Navigator>
+          <Drawer.Screen name="Login" component={LoginScreen} />
           <Drawer.Screen name="Wilders" component={WilderScreen} />
+          <Drawer.Screen name="Notifications" component={NotificationsScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     </ApolloProvider>

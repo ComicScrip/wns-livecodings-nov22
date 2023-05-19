@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, StyleSheet, Text, TextInput, View } from "react-native";
 import {
   useGetProfileQuery,
   useLoginMutation,
   useLogoutMutation,
+  useUpdateProfileMutation,
 } from "../gql/generated/schema";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import * as SecureStore from "expo-secure-store";
+import { registerForPushNotificationsAsync } from "../utils/notifications";
 
 export default function LoginScreen() {
   const [credentials, setCredentials] = useState({
@@ -20,17 +22,30 @@ export default function LoginScreen() {
     errorPolicy: "ignore",
   });
 
+  const [updateProfile] = useUpdateProfileMutation();
+
+  useEffect(() => {
+    if (currentUser?.profile)
+      registerForPushNotificationsAsync().then((expoNotificationToken) =>
+        updateProfile({ variables: { data: { expoNotificationToken } } })
+      );
+  }, [currentUser?.profile]);
+
   return (
-    <View>
-      <Text>login screen</Text>
+    <View style={styles.container}>
       {currentUser?.profile ? (
         <View>
-          <Text>connected as {currentUser?.profile.email}</Text>
+          <Text>connected as {currentUser.profile.email}</Text>
           <Button
             onPress={async () => {
-              await logout();
-              client.resetStore();
-              AsyncStorage.setItem("token", "");
+              try {
+                await logout();
+                SecureStore.deleteItemAsync("token");
+              } catch (err) {
+                setError("invalid credentials");
+              } finally {
+                client.resetStore();
+              }
             }}
             title="Log out"
           />
@@ -38,31 +53,34 @@ export default function LoginScreen() {
       ) : (
         <View>
           <TextInput
-            onChangeText={(val) =>
-              setCredentials({ ...credentials, email: val })
-            }
             value={credentials.email}
+            onChangeText={(newValue) =>
+              setCredentials({ ...credentials, email: newValue })
+            }
           />
           <TextInput
-            onChangeText={(val) =>
-              setCredentials({ ...credentials, password: val })
-            }
             value={credentials.password}
+            onChangeText={(newValue) =>
+              setCredentials({ ...credentials, password: newValue })
+            }
           />
-          {error && <Text style={{ color: "red" }}>{error}</Text>}
+
           <Button
-            onPress={() => {
-              login({ variables: { data: credentials } })
-                .then((res) => {
-                  client.resetStore();
-                  if (res.data?.login)
-                    //SecureStore.setItemAsync("token", res.data?.login);
-                    AsyncStorage.setItem("token", res.data?.login);
-                })
-                .catch(() => setError("invalid credentials"));
+            onPress={async () => {
+              try {
+                setError("");
+                const res = await login({ variables: { data: credentials } });
+                SecureStore.setItemAsync("token", res.data?.login as string);
+              } catch (err) {
+                setError("invalid credentials");
+              } finally {
+                client.resetStore();
+              }
             }}
             title="Log in"
           />
+
+          {error && <Text style={styles.error}>{error}</Text>}
         </View>
       )}
     </View>
@@ -71,6 +89,12 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 30,
     flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  error: {
+    color: "red",
   },
 });

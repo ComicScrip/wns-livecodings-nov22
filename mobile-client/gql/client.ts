@@ -1,21 +1,19 @@
+import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
+import * as SecureStore from "expo-secure-store";
 import Constants from "expo-constants";
 const env = Constants.expoConfig?.extra || {};
 
 console.log({ env });
 
-import { ApolloClient, createHttpLink, InMemoryCache } from "@apollo/client";
-
-import { setContext } from "@apollo/client/link/context";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-
 const httpLink = createHttpLink({
-  uri: env.REACT_APP_GRAPHQL_API_URL || ("http://192.168.1.7:4000" as string),
+  uri: env?.REACT_APP_GRAPHQL_API_URL || "http://localhost:4000",
   credentials: "include",
 });
 
 const authLink = setContext(async (_, { headers }) => {
   // get the authentication token from local storage if it exists
-  const token = await AsyncStorage.getItem("token");
+  const token = await SecureStore.getItemAsync("token");
   // return the headers to the context so httpLink can read them
   return {
     headers: {
@@ -25,8 +23,7 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
-//https://www.apollographql.com/docs/react/networking/authentication/#cookie
-export default new ApolloClient({
+const client = new ApolloClient({
   cache: new InMemoryCache(),
   defaultOptions: {
     query: {

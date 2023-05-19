@@ -28,7 +28,9 @@ export default function WilderScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
   separator: {
     height: 1,
     backgroundColor: "lightgrey",
