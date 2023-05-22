@@ -1,6 +1,8 @@
 name: Build Android App
 on:
   push:
+    tags:
+      - "v*.*.*"
 
 jobs:
   build:
@@ -41,3 +43,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: mobile-client/app-build-${{ env.NOW }}.apk
+          if: startsWith(github.ref, 'refs/tags/')
