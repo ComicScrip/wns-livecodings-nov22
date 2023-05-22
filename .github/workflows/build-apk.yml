@@ -37,9 +37,7 @@ jobs:
             --output=./app-build-${{ env.NOW }}.apk \
             --platform=android \
             --profile=preview
-
-      - name: 📱 Upload binary
-        uses: actions/upload-artifact@v2
+      - name: 📱 Upload APK
+        uses: softprops/action-gh-release@v1
         with:
-          name: wildersbook-nov21-preview-${{ env.NOW }}
-          path: mobile-client/app-build-${{ env.NOW }}.apk
+          files: mobile-client/app-build-${{ env.NOW }}.apk
