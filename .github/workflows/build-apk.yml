@@ -8,6 +8,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Set current date as env variable
+        run: echo "NOW=$(date +'%Y-%m-%dT%H%M%S')" >> $GITHUB_ENV
       - name: 🏗 Setup repo
         uses: actions/checkout@v2
 
@@ -17,7 +19,7 @@ jobs:
           node-version: "16.x"
 
       - name: Notify on discord
-        run: "docker run -e BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} -e CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }} scrip/discord-notifier npm run send-message 'a new release for android is available: https://github.com/ComicScrip/wns-livecodings-nov22/releases/download/v1.0.5/app-build-2023-05-25T150323.apk'"
+        run: "docker run -e BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} -e CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }} scrip/discord-notifier npm run send-message 'a new release for android is available: https://github.com/ComicScrip/wns-livecodings-nov22/releases/download/${{ github.ref_name }}"/app-build-${{ env.NOW }}.apk'"
 
       - name: 🏗 Setup Expo and EAS
         uses: expo/expo-github-action@v7
@@ -31,9 +33,6 @@ jobs:
 
       - name: 📦 Install dependencies
         run: cd mobile-client && npm i
-
-      - name: Set current date as env variable
-        run: echo "NOW=$(date +'%Y-%m-%dT%H%M%S')" >> $GITHUB_ENV
 
       - name: 👷 Build app
         run: |
