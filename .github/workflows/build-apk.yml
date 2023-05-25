@@ -1,6 +1,8 @@
 name: Build Android App
 on:
   push:
+    tags:
+      - "*"
 
 jobs:
   build:
