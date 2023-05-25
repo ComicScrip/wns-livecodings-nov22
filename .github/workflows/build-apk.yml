@@ -39,7 +39,7 @@ jobs:
             --output=./app-build-${{ env.NOW }}.apk \
             --platform=android \
             --profile=preview
-      - name: 📱 Upload APK
+      - name: 📱Upload APK
         uses: softprops/action-gh-release@v1
         with:
           files: mobile-client/app-build-${{ env.NOW }}.apk
