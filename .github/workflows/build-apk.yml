@@ -12,16 +12,12 @@ jobs:
         run: echo "NOW=$(date +'%Y-%m-%dT%H%M%S')" >> $GITHUB_ENV
       - name: 🏗 Setup repo
         uses: actions/checkout@v2
-
       - name: 🏗 Setup Node
         uses: actions/setup-node@v2
         with:
           node-version: "16.x"
-
       - name: Notify on discord
         run: "docker run -e BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} -e CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }} scrip/discord-notifier npm run send-message 'a new release for android is available: https://github.com/ComicScrip/wns-livecodings-nov22/releases/download/${{ github.ref_name }}"/app-build-${{ env.NOW }}.apk'"
-
-
       - name: 🏗 Setup Expo and EAS
         uses: expo/expo-github-action@v7
         with:
