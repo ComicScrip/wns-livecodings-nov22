@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: "16.x"
       - name: Notify on discord
-        run: "docker run -e BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} -e CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }} scrip/discord-notifier npm run send-message 'a new release for android is available: https://github.com/ComicScrip/wns-livecodings-nov22/releases/download/${{ github.ref_name }}"/app-build-${{ env.NOW }}.apk'"
+        run: "docker run -e BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} -e CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }} scrip/discord-notifier npm run send-message 'a new release for android is available: https://github.com/ComicScrip/wns-livecodings-nov22/releases/download/${{ github.ref_name }}/app-build-${{ env.NOW }}.apk'"
       - name: 🏗 Setup Expo and EAS
         uses: expo/expo-github-action@v7
         with:
