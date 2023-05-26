@@ -41,5 +41,5 @@ jobs:
         with:
           files: mobile-client/app-build-${{ env.NOW }}.apk
           if: startsWith(github.ref, 'refs/tags/')
-      - name: 📢 Notify on discord
+      - name: 📢Notify on discord
         run: "docker run -e BOT_TOKEN=${{ secrets.DISCORD_BOT_TOKEN }} -e CHANNEL_ID=${{ secrets.DISCORD_CHANNEL_ID }} scrip/discord-notifier npm run send-message 'a new release for android is available: https://github.com/ComicScrip/wns-livecodings-nov22/releases/download/${{ github.ref_name }}/app-build-${{ env.NOW }}.apk'"
