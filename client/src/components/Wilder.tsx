@@ -84,7 +84,7 @@ const Wilder = ({
             <Link to={`/wilders/${id}/edit`}>
               <button className="mb-2 w-full">✏️</button>
             </Link>
-            {/* canDelete && <button onClick={handleDelete}>x</button> */}
+            {canDelete && <button onClick={handleDelete}>x</button>}
           </div>
         </div>
       </div>
