@@ -1,8 +1,8 @@
-name: Test, compile and push production client to dockerhub
+name: build and push production client to dockerhub
 
 on:
   push:
-    branches: ["ci-tests"]
+    branches: ["main"]
 
   build-and-push-client:
     runs-on: ubuntu-latest
