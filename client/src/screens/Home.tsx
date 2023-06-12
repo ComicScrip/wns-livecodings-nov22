@@ -13,6 +13,7 @@ export default function Home() {
 
   return (
     <div>
+      <p>V1</p>
       <WilderForm />
       <ul
         data-testid="wilder-list"
