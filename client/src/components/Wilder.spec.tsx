@@ -24,10 +24,7 @@ describe("Wilder component", () => {
           wilder={{
             id: 1,
             name: "Dave",
-            skills: [
-              { id: 1, name: "PHP", votes: 3 },
-              { id: 2, name: "JS", votes: 7 },
-            ],
+            skills: [{ id: 2, name: "JS", votes: 7 }],
           }}
         />
       </MockedProvider>,
