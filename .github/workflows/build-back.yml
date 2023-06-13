@@ -5,7 +5,7 @@ on:
     branches: ["main"]
 
 jobs:
-  build-and-push-client:
+  build-and-push-server:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -23,6 +23,6 @@ jobs:
           push: true
           build-args: |
             "REACT_APP_GRAPHQL_API_URL=https://pierre.wns.wilders.dev/graphql"
-          context: "{{defaultContext}}:client"
+          context: "{{defaultContext}}:server"
           file: "Dockerfile.production"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-client
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-server
