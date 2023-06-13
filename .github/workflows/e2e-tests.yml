@@ -8,7 +8,7 @@ jobs:
     steps:
       - name: Check out code
         uses: actions/checkout@v3
-      - name: Make envfile
+      - name: Make envfile server
         uses: SpicyPizza/create-envfile@v1.3
         with:
           envkey_JWT_PRIVATE_KEY: zeyfgzeigfyzegfyuzegf
@@ -22,6 +22,12 @@ jobs:
           envkey_DB_PASS: postgres
           envkey_DB_NAME: postgres
           directory: server
+          file_name: .env
+      - name: Make envfile client
+        uses: SpicyPizza/create-envfile@v1.3
+        with:
+          envkey_REACT_APP_GRAPHQL_API_URL: http://localhost:4000
+          directory: client
           file_name: .env
       - name: Run e2e tests
         run: npm run e2e-tests
