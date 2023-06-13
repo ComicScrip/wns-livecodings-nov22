@@ -7,11 +7,9 @@ RUN npm i -g node-pre-gyp
 RUN mkdir /server
 WORKDIR /server
 
-COPY ./server/package.json ./package.json
-COPY ./server/pnpm-lock.yaml ./pnpm-lock.yaml
+COPY ./server/package*.json .
 
-RUN npm i -g pnpm
-RUN pnpm i
+RUN npm i
 
 COPY ./server/src ./src
 COPY ./server/.env ./.env
