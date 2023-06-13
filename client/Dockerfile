@@ -6,7 +6,6 @@ RUN mkdir /app
 WORKDIR /app
 
 COPY package*.json .
-COPY pnpm* .
 COPY .npmrc .
 
 RUN npm i
