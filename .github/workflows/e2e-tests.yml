@@ -17,6 +17,10 @@ jobs:
           envkey_SERVER_HOST: "localhost"
           envkey_SERVER_PORT: "4000"
           envkey_DB_HOST: localhost
+          envkey_DB_PORT: 5432
+          envkey_DB_USER: postgres
+          envkey_DB_PASS: postgres
+          envkey_DB_NAME: postgres
           directory: server
           file_name: .env
       - name: Run e2e tests
