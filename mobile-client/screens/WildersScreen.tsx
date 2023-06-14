@@ -12,6 +12,7 @@ export default function WilderScreen() {
 
   return (
     <View style={styles.container}>
+      <Text>hello</Text>
       <Text>
         {JSON.stringify({ error, data, loadingWilders, env }, null, 2)}
       </Text>
