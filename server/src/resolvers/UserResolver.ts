@@ -97,7 +97,7 @@ class UserResolver {
     if (typeof user.expoNotificationToken === "undefined")
       throw new Error("user has no registered device token");
 
-    const res = await expo.sendPushNotificationsAsync([
+    await expo.sendPushNotificationsAsync([
       {
         to: user.expoNotificationToken,
         title: data.title,
@@ -108,8 +108,6 @@ class UserResolver {
             : undefined,
       },
     ]);
-
-    console.log({ res });
 
     return true;
   }
