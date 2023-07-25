@@ -9,6 +9,10 @@ import jwt from "jsonwebtoken";
 import { env } from "./env";
 import User from "./entity/User";
 import cookie from "cookie";
+import { GradeResolver } from "./resolvers/GradeResolver";
+import { SkillResolver } from "./resolvers/SkillResolver";
+import UserResolver from "./resolvers/UserResolver";
+import { WilderResolver } from "./resolvers/wilderResolver";
 
 export interface JWTPayload {
   userId: number;
@@ -24,7 +28,7 @@ async function start(): Promise<void> {
   await db.initialize();
 
   const schema = await buildSchema({
-    resolvers: [join(__dirname, "/resolvers/*.ts")],
+    resolvers: [GradeResolver, SkillResolver, UserResolver, WilderResolver],
     authChecker: async ({ context }: { context: ContextType }, roles = []) => {
       const { req } = context;
       const tokenInAuthHeaders = req.headers.authorization?.split(" ")[1];
