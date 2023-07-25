@@ -3,7 +3,6 @@ import db from "./db";
 import { ApolloServer } from "apollo-server";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { buildSchema } from "type-graphql";
-import { join } from "path";
 import express from "express";
 import jwt from "jsonwebtoken";
 import { env } from "./env";
