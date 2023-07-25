@@ -26,9 +26,6 @@ jobs:
           file: "Dockerfile.production"
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-server
   build-and-push-client:
-    needs:
-      - client-tests
-      - e2e-tests
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
