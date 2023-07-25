@@ -14,7 +14,6 @@ function App() {
     <>
       <Toaster position="bottom-center" />
       <Header />
-      <p>V2</p>
       <main className="container pb-8 bg-cream">
         <Routes>
           <Route path="/" element={<Home />} />
