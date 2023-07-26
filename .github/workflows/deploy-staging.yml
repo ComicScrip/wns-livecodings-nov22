@@ -13,6 +13,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
       image_name: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-server:staging
+
   build-and-push-client-staging:
     uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-front.yml@develop
     secrets:
@@ -20,6 +21,7 @@ jobs:
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
       image_name: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-client:staging
+
   notify:
     needs:
       - build-and-push-server-staging
