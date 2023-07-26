@@ -6,44 +6,37 @@ on:
   workflow_dispatch:
 
 jobs:
+  client-tests:
+    uses: ComicScrip/wns-livecodings-nov22/.github/workflows/test-front.yml@main
+
+  e2e-tests:
+    uses: ComicScrip/wns-livecodings-nov22/.github/workflows/e2e-tests.yml@main
+
+  integration-tests:
+    uses: ComicScrip/wns-livecodings-nov22/.github/workflows/integration-tests.yml@main
+
   build-and-push-server:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          context: "{{defaultContext}}:server"
-          file: "Dockerfile.production"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-server
+    needs:
+      - integration-tests
+      - e2e-tests
+    uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-back.yml@main
+    secrets:
+      DOCKERHUB_USERNAME: scrip
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:
+      image_name: scrip/wns-livecodings-nov22-server
+
   build-and-push-client:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          push: true
-          context: "{{defaultContext}}:client"
-          file: "Dockerfile.production"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-client
+    needs:
+      - client-tests
+      - e2e-tests
+    uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-front.yml@main
+    secrets:
+      DOCKERHUB_USERNAME: scrip
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:
+      image_name: scrip/wns-livecodings-nov22-client
+
   notify-vps:
     needs:
       - build-and-push-client

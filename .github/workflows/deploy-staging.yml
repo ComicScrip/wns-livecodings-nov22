@@ -1,0 +1,34 @@
+name: Compile and push client and server to staging
+
+on:
+  push:
+    branches: ["develop"]
+  workflow_dispatch:
+
+jobs:
+  build-and-push-server-staging:
+    uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-back.yml@develop
+    secrets:
+      DOCKERHUB_USERNAME: scrip
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:
+      image_name: scrip/wns-livecodings-nov22-server:staging
+
+  build-and-push-client-staging:
+    uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-front.yml@develop
+    secrets:
+      DOCKERHUB_USERNAME: scrip
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
+    with:
+      image_name: scrip/wns-livecodings-nov22-client:staging
+
+  notify:
+    needs:
+      - build-and-push-server-staging
+      - build-and-push-client-staging
+    runs-on: ubuntu-latest
+    steps:
+      - name: Call VPS webhook to update staging
+        uses: wei/curl@master
+        with:
+          args: https://ops.pierre.wns.wilders.dev/hooks/update-staging
