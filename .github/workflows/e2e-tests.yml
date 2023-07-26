@@ -1,6 +1,8 @@
 name: e2e-tests
 
-on: pull_request
+on:
+  pull_request:
+  workflow_call:
 
 jobs:
   e2e-tests:

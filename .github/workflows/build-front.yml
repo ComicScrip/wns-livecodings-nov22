@@ -2,6 +2,10 @@ name: build and push production client to dockerhub
 
 on:
   workflow_call:
+    inputs:
+      image_name:
+        type: string
+        required: true
     secrets:
       DOCKERHUB_USERNAME:
         required: true
@@ -29,4 +33,4 @@ jobs:
             "REACT_APP_GRAPHQL_API_URL=https://pierre.wns.wilders.dev/graphql"
           context: "{{defaultContext}}:client"
           file: "Dockerfile.production"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-client:staging
+          tags: ${{ inputs.image_name }}

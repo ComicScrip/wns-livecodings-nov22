@@ -2,6 +2,10 @@ name: build and push production server to dockerhub
 
 on:
   workflow_call:
+    inputs:
+      image_name:
+        type: string
+        required: true
     secrets:
       DOCKERHUB_USERNAME:
         required: true
@@ -27,4 +31,4 @@ jobs:
           push: true
           context: "{{defaultContext}}:server"
           file: "Dockerfile.production"
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-server:staging
+          tags: ${{ inputs.image_name }}
