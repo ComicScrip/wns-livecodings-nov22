@@ -21,10 +21,10 @@ jobs:
       - e2e-tests
     uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-back.yml@main
     secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_USERNAME: scrip
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
-      image_name: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-server
+      image_name: scrip/wns-livecodings-nov22-server
 
   build-and-push-client:
     needs:
@@ -32,10 +32,10 @@ jobs:
       - e2e-tests
     uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-front.yml@main
     secrets:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_USERNAME: scrip
       DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
     with:
-      image_name: ${{ secrets.DOCKERHUB_USERNAME }}/wns-livecodings-nov22-client
+      image_name: scrip/wns-livecodings-nov22-client
 
   notify-vps:
     needs:
