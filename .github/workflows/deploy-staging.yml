@@ -8,8 +8,14 @@ on:
 jobs:
   build-and-push-server-staging:
     uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-back.yml@develop
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   build-and-push-client-staging:
     uses: ComicScrip/wns-livecodings-nov22/.github/workflows/build-front.yml@develop
+    secrets:
+      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
   notify:
     needs:
       - build-and-push-server-staging
