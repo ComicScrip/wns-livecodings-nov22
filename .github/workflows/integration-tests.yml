@@ -10,7 +10,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Make envfile
         run: |
-          echo JWT_PRIVATE_KEY=zeyfgzeigfyzegfyuzegf >> .env
+          echo JWT_PRIVATE_KEY=zeyfgzeigfyzegfyuzegf >> ./server/.env
 
       - name: Run integration test
         run: npm run integration-tests
